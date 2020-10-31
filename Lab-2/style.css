@@ -5,8 +5,8 @@
 }
 
 body {
-    background-image: url("./bg.jpg");
-    background-size: cover;
+    /* background-image: url("./bg.jpg");
+    background-size: cover; */
     font-family: "Poppins", sans-serif;
     display: flex;
     flex-direction: column;
@@ -14,6 +14,11 @@ body {
     justify-content: center;
     margin: 0;
     min-height: 100vh;
+}
+h2 {
+    display: flex;
+    align-items: center;
+
 }
 
 input {
@@ -32,18 +37,39 @@ input:focus {
 }
 
 .weather {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
 }
 .weather p{
     font-weight: bold;
+    font-size: x-large;
 }
+.weather table{
+    font-size: large;
+    align-items: center;
+    margin: 1rem;
+}
+.weather tr td{
+}
+
+.weather tr td h4{
+    font-size: large;
+    margin-top: 0rem;
+    margin-bottom: 0.1rem;
+
+
+}
+.weather tr td img {
+    height: 40px;
+    width: 40px;
+}
+
 .weather small{
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.weather h2 {
+.weather h4 {
     display: flex;
     align-items: center;
     margin-top: -3rem;
