@@ -4,8 +4,8 @@
     box-sizing: border-box;
 }
 body {
-    /* background-image: url("./bg.jpg");
-    background-size: cover; */
+    background-image: url("./bg2.jpg");
+    background-size: cover;
     font-family: "Poppins", sans-serif;
     display: flex;
     flex-direction: column;
