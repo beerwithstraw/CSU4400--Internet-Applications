@@ -15,8 +15,11 @@ var nextDay4 = new Date(today);
 nextDay4.setDate(today.getDate() + 4);
 
 
+
 const url = (city) =>
     `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apikey}`;
+    // const url = (city) =>
+    // `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=${apikey}`;
 
 getWeatherByLocation("London");
 
@@ -26,7 +29,7 @@ async function getWeatherByLocation(city) {
 
     console.log(respData);
     console.log(today.toLocaleDateString())
-
+    
     addWeatherToPage(respData);
 }
 
