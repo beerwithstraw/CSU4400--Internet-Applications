@@ -177,6 +177,14 @@ else{
             </tr>                        
             </table>
 
+            <ul>
+                <p>Points to consider before travelling:</p>
+                <li>Yohooooooooooooooooooooooooooo</li>
+                <li>Yohooooooooooooooooooooooooooo</li>
+                <li>Yohooooooooooooooooooooooooooo</li>
+
+            </ul>
+
     `;
 
     // cleanup
