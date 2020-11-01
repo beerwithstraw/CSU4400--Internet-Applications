@@ -14,7 +14,14 @@ body {
     margin: 0;
     min-height: 100vh;
 }
-h2 {
+ body div h4 {
+    font-weight: normal;
+    align-items: center;
+    text-align: center;
+    margin-top: -1.2rem;
+    margin-bottom: 1rem;
+}
+h1 {
     display: flex;
     align-items: center;
 }

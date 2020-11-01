@@ -1,3 +1,15 @@
+//Vue.Js basic implemention using V-directives & moustache syntax
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        message: 'Weather Forecast',
+        days: '(For the upcoming 5-days)'
+    }
+});
+
+// Using openweathermap.org's Daily Forecast 16 Days API
+
 var apikey = "3265874a2c77ae4a04bb96236a642d2f";
 var main = document.getElementById("main");var form = document.getElementById("form");var search = document.getElementById("search");
 var options = {day: 'numeric', month: 'long', weekday: 'long' };
@@ -11,10 +23,15 @@ nextDay3.setDate(today.getDate() + 3);
 var nextDay4 = new Date(today);
 nextDay4.setDate(today.getDate() + 4);
 
+
 var url = (city) =>
     `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=${apikey}`;
 
-getWeatherByLocation("London");
+// Randomly displays cities with same names in different countries.
+// Therefore, mention country initials along with the city name for clarification.
+// For Example: Dublin, IE & Dublin, US
+
+getWeatherByLocation("Dublin, IE");
 
 async function getWeatherByLocation(city) {
 var resp = await fetch(url(city), { origin: "cors" });
@@ -27,6 +44,9 @@ var respData = await resp.json();
 }
 
 function addWeatherToPage(data) {
+
+
+// Calling Max/Min Temperature from API
 var temp0max = KtoC(data.list[0].temp.max).toFixed(0);
 var temp0min = KtoC(data.list[0].temp.min).toFixed(0);
 var temp1max = KtoC(data.list[1].temp.max).toFixed(0);
@@ -38,44 +58,46 @@ var temp3min = KtoC(data.list[3].temp.min).toFixed(0);
 var temp4max = KtoC(data.list[4].temp.max).toFixed(0);
 var temp4min = KtoC(data.list[5].temp.min).toFixed(0);
 
+// Average Temperature for everyday
 var avgtemp0 = ((KtoC(data.list[0].temp.max) + KtoC(data.list[0].temp.min))/2);
-//console.log(avgtemp0);
 var avgtemp1 = ((KtoC(data.list[1].temp.max) + KtoC(data.list[1].temp.min))/2);
-//console.log(avgtemp1);
 var avgtemp2 = ((KtoC(data.list[2].temp.max) + KtoC(data.list[2].temp.min))/2);
-//console.log(avgtemp2);
 var avgtemp3 = ((KtoC(data.list[3].temp.max) + KtoC(data.list[3].temp.min))/2);
-//console.log(avgtemp3);
 var avgtemp4 = ((KtoC(data.list[4].temp.max) + KtoC(data.list[4].temp.min))/2);
-//console.log(avgtemp4);
+
+// Average Temperature for the upcoming 5-days
+// Decides whether to pack for Hot, Cold, Warm weather respectively.
 var avgtemptotal = (avgtemp0+avgtemp1+avgtemp2+avgtemp3+avgtemp4)/5;
-//console.log(avgtemptotal);
 
-
+// Calling corresponding Weather Icon from API
 var icon0 = data.list[0].weather[0].icon;
 var icon1 = data.list[1].weather[0].icon;
 var icon2 = data.list[2].weather[0].icon;
 var icon3 = data.list[3].weather[0].icon;
 var icon4 = data.list[4].weather[0].icon;
 
+// Calling corresponding Weather description from API
 var description0 = data.list[0].weather[0].description;
 var description1 = data.list[1].weather[0].description;
 var description2 = data.list[2].weather[0].description;
 var description3 = data.list[3].weather[0].description;
 var description4 = data.list[4].weather[0].description;
 
+// Calling corresponding Wind Speed from API
 var wind0 = data.list[0].speed;
 var wind1 = data.list[1].speed;
 var wind2 = data.list[2].speed;
 var wind3 = data.list[3].speed;
 var wind4 = data.list[4].speed;
 
-    var rain0;
-    var rain1;
-    var rain2;
-    var rain3;
-    var rain4;
-    
+// Initialize variables for rain forecast
+var rain0;
+var rain1;
+var rain2;
+var rain3;
+var rain4;
+
+// If-Else loops to display a message when there is Rain Forecast or Rain forecast is not defined.
     if ((typeof data.list[0].rain == "undefined") || (data.list[0].rain == "undefined")){
         rain0 = "No Rain Forecast"
     }
@@ -117,6 +139,7 @@ var wind4 = data.list[4].speed;
     var textToDisplay1;
     var textToDisplay2;
 
+// Text message depending on Rain Forecast
     if ((rain0 == "No Rain Forecast") && (rain1 == "No Rain Forecast") && (rain2 == "No Rain Forecast") && (rain3 == "No Rain Forecast") && (rain4 == "No Rain Forecast")){
         textToDisplay1 = "You don't need to pack an Umbrella as there is no forecast for rain over the next 5-days."
     }
@@ -139,7 +162,7 @@ var wind4 = data.list[4].speed;
         
     }
 
-
+// Calling API on Server-Side due to 'same-origin restrictions' on Client-Side
 var weather = document.createElement("div");
     weather.classList.add("weather");
 
@@ -217,7 +240,7 @@ var weather = document.createElement("div");
     // cleanup
     main.innerHTML = "";
 
-    main.appendChild(weather);
+    main.appendChild(weather);  
 }
 
 function KtoC(K) {
@@ -228,8 +251,10 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
 var city = search.value;
 
+
     if (city) {
         getWeatherByLocation(city);
     }
 
 });
+
