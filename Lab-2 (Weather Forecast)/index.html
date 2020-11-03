@@ -5,23 +5,29 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Weather App</title>
-        <link rel="stylesheet" href="style.css" />
+        <!-- I have added this project to my website and calling the CSS file from the project folder -->
+        <link rel="stylesheet" href="https://beerwithstraw.github.io/JavaScript%20Projects/Lab-2%20(Weather%20Forecast)/style.css" />
+        <!-- <link rel="stylesheet" href="style.css" /> -->
+
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
         <script src="script.js" defer></script>
 
     </head>
     <body>
+
         <!-- Calling Vue.Js syntax from Server-Side -->
         <div id = "app">
-           <h1> {{ message }} </h1>  
-           <h4><span v-html="days"></span></h4>
+           <h1 v-switch-color = "['purple', 'gold', 'pink', 'blue', 'green']"> {{ message }} </h1>  
+           <h4><span v-purple v-html="days"></span></h4>
         </div>
+
         <!-- Submit Form for City Name -->
+
         <form id="form">
             <input
                 type="text"
                 id="search"
-                placeholder="Enter Location"
+                placeholder="Search Location "
                 autocomplete="off"
             />
         </form>

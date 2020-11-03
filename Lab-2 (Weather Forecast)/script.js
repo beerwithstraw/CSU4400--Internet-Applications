@@ -1,10 +1,22 @@
 //Vue.Js basic implemention using V-directives & moustache syntax
 
+
+Vue.directive('switch-color', function (el, binding) {
+    const colors = binding.value;
+    let i = 0
+    setInterval (() => {
+        el.style.color = colors[i++];
+        if (i > colors.length - 1 ){
+            i = 0;
+        }
+    },500)
+})
+
 var app = new Vue({
     el: '#app',
     data: {
         message: 'Weather Forecast',
-        days: '(For the upcoming 5-days)'
+        days: '(For the upcoming 5-days)',
     }
 });
 
@@ -24,12 +36,14 @@ var nextDay4 = new Date(today);
 nextDay4.setDate(today.getDate() + 4);
 
 
+
 var url = (city) =>
     `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=${apikey}`;
 
 // Randomly displays cities with same names in different countries.
 // Therefore, mention country initials along with the city name for clarification.
 // For Example: Dublin, IE & Dublin, US
+// If you just enter "Dublin", it'll display weather of Dublin, USA by default.
 
 getWeatherByLocation("Dublin, IE");
 
@@ -167,7 +181,7 @@ var weather = document.createElement("div");
     weather.classList.add("weather");
 
     weather.innerHTML = `
-        <p>${data.city.name}</p>
+        <p>${data.city.name}, ${data.city.country}</p>
         <style>
             table, th, td {
                 border: 1px solid black;
