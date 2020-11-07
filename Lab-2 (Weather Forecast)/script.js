@@ -1,6 +1,4 @@
 //Vue.Js basic implemention using V-directives & moustache syntax
-
-
 Vue.directive('switch-color', function (el, binding) {
     const colors = binding.value;
     let i = 0
@@ -18,13 +16,17 @@ var app = new Vue({
         message: 'Weather Forecast',
         days: '(For the upcoming 5-days)',
     }
+    
 });
 
-// Using openweathermap.org's Daily Forecast 16 Days API
-
+// API key as variable
 var apikey = "3265874a2c77ae4a04bb96236a642d2f";
-var main = document.getElementById("main");var form = document.getElementById("form");var search = document.getElementById("search");
-var options = {day: 'numeric', month: 'long', weekday: 'long' };
+
+var main = document.getElementById("main");
+var form = document.getElementById("form");
+var search = document.getElementById("search");
+
+// Setting 5-days in variables
 var today = new Date();
 var nextDay1 = new Date(today);
 nextDay1.setDate(today.getDate() + 1);
@@ -34,26 +36,39 @@ var nextDay3 = new Date(today);
 nextDay3.setDate(today.getDate() + 3);
 var nextDay4 = new Date(today);
 nextDay4.setDate(today.getDate() + 4);
+var options = {day: 'numeric', month: 'long', weekday: 'long' };
+
+// Using openweathermap.org's Daily Forecast 16 Days API
+var url = (city) => `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=${apikey}`;
 
 
+function KtoC(K) {
+    return Math.floor(K - 273.15);
+}
 
-var url = (city) =>
-    `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=${apikey}`;
+//Storing data from user as 'city'
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    var city = search.value;
+    if (city) {
+        getWeatherByLocation(city);
+    }
+});
 
+// !!!Note!!!
 // Randomly displays cities with same names in different countries.
 // Therefore, mention country initials along with the city name for clarification.
 // For Example: Dublin, IE & Dublin, US
 // If you just enter "Dublin", it'll display weather of Dublin, USA by default.
 
+//Display this city be default
 getWeatherByLocation("Dublin, IE");
 
 async function getWeatherByLocation(city) {
 var resp = await fetch(url(city), { origin: "cors" });
 var respData = await resp.json();
 
-    console.log(respData);
-    console.log(today.toDateString())
-    
+    console.log(respData);   
     addWeatherToPage(respData);
 }
 
@@ -112,69 +127,57 @@ var rain3;
 var rain4;
 
 // If-Else loops to display a message when there is Rain Forecast or Rain forecast is not defined.
-    if ((typeof data.list[0].rain == "undefined") || (data.list[0].rain == "undefined")){
-        rain0 = "No Rain Forecast"
-    }
-    else{
-        rain0 = data.list[0].rain+" mm/h";
+if ((typeof data.list[0].rain == "undefined") || (data.list[0].rain == "undefined")){
+    rain0 = "No Rain Forecast"
+}
+else{
+    rain0 = data.list[0].rain+" mm/h";
+}
+if ((typeof data.list[1].rain == "undefined") || (data.list[1].rain == "undefined")){
+    rain1 = "No Rain Forecast"
+}
+else{
+    rain1 = data.list[1].rain+" mm/h";
+}
+if ((typeof data.list[2].rain == "undefined") || (data.list[2].rain == "undefined")){
+    rain2 = "No Rain Forecast"
+}
+else{
+    rain2 = data.list[2].rain+" mm/h";
+}
+if ((typeof data.list[3].rain == "undefined") || (data.list[3].rain == "undefined")){
+    rain3 = "No Rain Forecast"
+}
+else{
+    rain3 = data.list[3].rain+" mm/h";
+}
+if ((typeof data.list[4].rain == "undefined") || (data.list[4].rain == "undefined")){
+    rain4 = "No Rain Forecast"
+}
+else{
+    rain4 = data.list[4].rain+" mm/h";
+}
 
-    }
-    if ((typeof data.list[1].rain == "undefined") || (data.list[1].rain == "undefined")){
-        rain1 = "No Rain Forecast"
-    }
-    else{
-        rain1 = data.list[1].rain+" mm/h";
-
-    }
-    if ((typeof data.list[2].rain == "undefined") || (data.list[2].rain == "undefined")){
-        rain2 = "No Rain Forecast"
-
-    }
-    else{
-        rain2 = data.list[2].rain+" mm/h";
-
-    }
-    if ((typeof data.list[3].rain == "undefined") || (data.list[3].rain == "undefined")){
-        rain3 = "No Rain Forecast"
-    }
-    else{
-        rain3 = data.list[3].rain+" mm/h";
-
-    }
-    if ((typeof data.list[4].rain == "undefined") || (data.list[4].rain == "undefined")){
-        rain4 = "No Rain Forecast"
-
-    }
-    else{
-        rain4 = data.list[4].rain+" mm/h";
-
-    }
-
-    var textToDisplay1;
-    var textToDisplay2;
+var textToDisplay1;
+var textToDisplay2;
 
 // Text message depending on Rain Forecast
-    if ((rain0 == "No Rain Forecast") && (rain1 == "No Rain Forecast") && (rain2 == "No Rain Forecast") && (rain3 == "No Rain Forecast") && (rain4 == "No Rain Forecast")){
-        textToDisplay1 = "You don't need to pack an Umbrella as there is no forecast for rain over the next 5-days."
-    }
-    else{
-        textToDisplay1 = "You should pack an Umbrella as it might rain sometime in the next 5-days."
+if ((rain0 == "No Rain Forecast") && (rain1 == "No Rain Forecast") && (rain2 == "No Rain Forecast") && (rain3 == "No Rain Forecast") && (rain4 == "No Rain Forecast")){
+    textToDisplay1 = "You don't need to pack an Umbrella as there is no forecast for rain over the next 5-days."
+}
+else{
+    textToDisplay1 = "You should pack an Umbrella as it might rain sometime in the next 5-days."
+}
 
-    }
-
-    if ( avgtemptotal > 20 ){
-        textToDisplay2 = "Pack for a Hot Weather as the average temperature will be greater than 20°C for the next 5-days. "
-
-    }
-    else if(avgtemptotal >10 && avgtemptotal <=20){
-        textToDisplay2 = "Pack for a Warm Weather as the average temperature will be vary from 10°C to 20°C for the next 5-days. "
-
-    }
-    else if(avgtemptotal >-10 && avgtemptotal <=10){
-        textToDisplay2 = "Pack for a Cold Weather as the average temperature will be vary from -10°C to 10°C for the next 5-days. "
-
-        
-    }
+if ( avgtemptotal > 20 ){
+    textToDisplay2 = "Pack for a Hot Weather as the average temperature will be greater than 20°C for the next 5-days. "
+}
+else if(avgtemptotal >10 && avgtemptotal <=20){
+    textToDisplay2 = "Pack for a Warm Weather as the average temperature will be vary from 10°C to 20°C for the next 5-days. "
+}
+else if(avgtemptotal >-10 && avgtemptotal <=10){
+    textToDisplay2 = "Pack for a Cold Weather as the average temperature will be vary from -10°C to 10°C for the next 5-days. "   
+}
 
 // Calling API on Server-Side due to 'same-origin restrictions' on Client-Side
 var weather = document.createElement("div");
@@ -251,24 +254,8 @@ var weather = document.createElement("div");
 
     `;
 
-    // cleanup
+    // Clean-up everytime new city is entered
     main.innerHTML = "";
 
     main.appendChild(weather);  
 }
-
-function KtoC(K) {
-    return Math.floor(K - 273.15);
-}
-
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-var city = search.value;
-
-
-    if (city) {
-        getWeatherByLocation(city);
-    }
-
-});
-
