@@ -1,16 +1,11 @@
-<!-- Link to the working project uploaded on my website -->
-<!-- https://beerwithstraw.github.io/JavaScript%20Projects/Lab-2%20(Weather%20Forecast)/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Weather Forecast</title>
-        <!-- I have added this project to my website and calling the CSS file from the project folder -->
-        <link rel="stylesheet" href="https://beerwithstraw.github.io/JavaScript%20Projects/Lab-2%20(Weather%20Forecast)/style.css" />
-        <!-- <link rel="stylesheet" href="style.css" /> -->
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="script.js" defer></script>
     </head>
     <body>
@@ -18,18 +13,58 @@
         <!-- Calling Vue.Js syntax from Server-Side -->
         <div id = "app">
            <h1 v-switch-color = "['purple', 'gold', 'pink', 'blue', 'green']"> {{ message }} </h1>  
-           <h4><span v-purple v-html="days"></span></h4>
+           <h4><span v-html="days"></span></h4>
         </div>
+        
+        <script>
+            Vue.directive('switch-color', function (el, binding) {
+                const colors = binding.value;
+                let i = 0
+                setInterval (() => {
+                    el.style.color = colors[i++];
+                    if (i > colors.length - 1 ){
+                        i = 0;
+                    }
+                },500)
+            })
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    message: 'Weather Forecast',
+                    days: '(For the upcoming 5-days)',
+                }
+                
+            });
+            
+        </script>
 
+        <div id="cityname">
         <!-- Submit Form for City Name -->
         <form id="form">
-            <input
+            <input v-on:keyup.enter="onEnter" 
                 type="text"
                 id="search"
                 placeholder="Search Location "
                 autocomplete="off"
+                ref="city"
             />
+            <p>{{ getcity }}</p>
         </form>
+
+        </div>
+        <script>
+            var cityname = new Vue({
+                el: '#cityname',
+                data: {
+                    getcity: "Waiting for user input...",
+                },
+                methods: {
+                    onEnter: function(){
+                        this.getcity= "Displaying results for " + this.$refs.city.value
+                    }
+                }
+            });
+        </script>
         <main id="main"></main>
     </body>
 </html>

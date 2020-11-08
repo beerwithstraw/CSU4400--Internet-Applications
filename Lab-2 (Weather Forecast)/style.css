@@ -38,7 +38,14 @@ input {
 input:focus {
     outline: none;
 }
+form p{
+    text-align: center;
+    margin-top: 0.3rem;
+    font-weight: bold;
+
+}
 .weather {
+    margin-top: -1rem;
     font-size: 1.5rem;
     text-align: center;
 }

@@ -1,30 +1,11 @@
-//Vue.Js basic implemention using V-directives & moustache syntax
-Vue.directive('switch-color', function (el, binding) {
-    const colors = binding.value;
-    let i = 0
-    setInterval (() => {
-        el.style.color = colors[i++];
-        if (i > colors.length - 1 ){
-            i = 0;
-        }
-    },500)
-})
-
-var app = new Vue({
-    el: '#app',
-    data: {
-        message: 'Weather Forecast',
-        days: '(For the upcoming 5-days)',
-    }
-    
-});
-
 // API key as variable
 var apikey = "3265874a2c77ae4a04bb96236a642d2f";
 
 var main = document.getElementById("main");
 var form = document.getElementById("form");
 var search = document.getElementById("search");
+var submit = document.getElementById("submit");
+
 
 // Setting 5-days in variables
 var today = new Date();
