@@ -1,0 +1,40 @@
+  
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Simple Cloud Application</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    
+    <body>
+        <div id="action">
+            <h1>Simple Cloud Application</h1>
+            <button v-on:click="createDatabase">Create Table</button><br>
+        </div>
+    
+        <script>
+            var action = new Vue({
+                el: "#action",
+                data: {
+                    title: '',
+                    year: '',
+                },
+                methods: {
+                    createDatabase: createDatabase,
+                }
+            })
+    
+            function createDatabase() {
+                let prom = fetch("/createDatabase", {method:"post"})
+                prom.then(response => response.json())
+                    .then(response => {
+                    })
+            }
+    
+    
+        </script>
+    </body>
+
+</html>
