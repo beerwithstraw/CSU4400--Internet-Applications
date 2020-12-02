@@ -11,7 +11,9 @@
     <body>
         <div id="action">
             <h1>Simple Cloud Application</h1>
-            <button v-on:click="createDatabase">Create Table</button><br>
+            <button v-on:click="createDatabase">Create Table</button><br><br>
+            <button v-on:click="deleteDatabase">Delete Table</button><br>
+
         </div>
     
         <script>
@@ -23,6 +25,7 @@
                 },
                 methods: {
                     createDatabase: createDatabase,
+                    deleteDatabase: deleteDatabase,
                 }
             })
     
@@ -33,6 +36,12 @@
                     })
             }
     
+            function deleteDatabase() {
+                let prom = fetch('/deleteDatabase', {method:'POST'})
+            prom.then(response => response.json())
+                .then(response => {
+                })
+            }
     
         </script>
     </body>

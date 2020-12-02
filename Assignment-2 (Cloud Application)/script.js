@@ -19,7 +19,7 @@ app.listen(PORT, () => console.log(`Server started on PORT: ${PORT} \n`));
 AWS.config.update({
     accessKeyId: publicKey,
     secretAccessKey: privateKey,
-    region: "eu-west-1",
+    region: "us-east-1",
 });
 
 var dynamodb = new AWS.DynamoDB();
@@ -87,6 +87,20 @@ app.post('/createDatabase', (req, res) => {
             });
         }
     })
+});
+
+app.post('/deleteDatabase', (req, res) => {
+    console.log("Deleting table...");
+    var params = {
+        TableName : "Movies",
+    };
+    dynamodb.deleteTable(params, function(err, data) {
+        if (err) {
+            console.error("Unable to delete table. Error JSON:", JSON.stringify(err, null, 2));
+        } else {
+            console.log("Successfully deleted table 'Movies'");
+        }
+    });
 });
 
 
