@@ -11,13 +11,38 @@
     <body>
         <div id="action">
             <h1>Simple Cloud Application</h1>
-            <button v-on:click="createDatabase">Create Table</button><br><br>
-           
-            Movie Title: <input v-model="title"><br> Movie Year: <input v-model="year"><br>
-            <button v-on:click="queryDatabase(year, title)">Query</button><br><br>
             
-            <button v-on:click="deleteDatabase">Delete Table</button><br><br>
-               
+                <!-- Create Table -->
+                <button v-on:click="createDatabase">Create Table</button><br><br>
+                <!-- Query Table -->
+                Movie Title: <input v-model="title"><br><br> Movie Year: <input v-model="year"><br><br>
+                <button v-on:click="queryDatabase(year, title)">Query Table</button><br><br>
+                <div v-show="tableQueried" >
+                    <table width=100% border=1px solid black align=center>
+                        <thead>
+                                <th>Movie</th>
+                                <th>Year</th>
+                                <th>Director</th>
+                                <th>Rating</th>
+                                <th>Rank</th>
+                                <th>Release Date</th>
+                                <th>Runtime</th>
+                                <th>Movie Cast</th>
+                                <th>Movie Plot</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="row in queryList">
+                                <td v-for="item in row">
+                                    {{item}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br><br>
+                </div>
+                <!-- Delete Table -->
+                <button v-on:click="deleteDatabase">Delete Table</button><br><br>
+
         </div>
     
         <script>
@@ -27,11 +52,12 @@
                     title: '',
                     year: '',
                     queryList: [],
+                    tableQueried: false,
                 },
                 methods: {
                     createDatabase: createDatabase,
-                    deleteDatabase: deleteDatabase,
                     queryDatabase: queryDatabase,
+                    deleteDatabase: deleteDatabase,
                 }
             })
     
@@ -42,6 +68,14 @@
                     })
             }
     
+            function queryDatabase(year, title) {
+            let prom = fetch('/queryDatabase/'+title+'/'+year, {method:'POST'})
+            prom.then(response => response.json())
+                .then(response => {
+                    this.queryList = response.movieList
+                    this.tableQueried = true
+                })
+        }
             function deleteDatabase() {
                 let prom = fetch('/deleteDatabase', {method:'POST'})
             prom.then(response => response.json())
@@ -49,13 +83,6 @@
                 })
             }
 
-            function queryDatabase(year, title) {
-            let prom = fetch('/queryDatabase/'+title+'/'+year, {method:'POST'})
-            prom.then(response => response.json())
-                .then(response => {
-                    this.queryList = response.movieList
-                })
-        }
 
     
         </script>

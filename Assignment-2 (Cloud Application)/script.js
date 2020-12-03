@@ -24,9 +24,6 @@ AWS.config.update({
 
 var dynamodb = new AWS.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
-var totalAdded = 0;
-var totalNotAdded = 0;
-
 
 app.post('/createDatabase', (req, res) => {
     console.log("Creating Table...")
@@ -43,8 +40,8 @@ app.post('/createDatabase', (req, res) => {
             { AttributeName: "title", AttributeType: "S" }
         ],
         ProvisionedThroughput: {
-            ReadCapacityUnits: 20,
-            WriteCapacityUnits: 20,
+            ReadCapacityUnits: 50,
+            WriteCapacityUnits: 50,
         }
     };
     dynamodb.createTable(params, function (err, data) {
@@ -87,13 +84,10 @@ app.post('/createDatabase', (req, res) => {
 
                 docClient.put(tableParams, function (err) {
                     if (err) {
-                        console.error("Error. Can't add Movie: ", movie.title);
-                        totalNotAdded++;
+                        console.error("\t\t\t\tError. Can't add Movie: ", movie.title);
                     } else {
                         console.log("Added Movie:", movie.title);
-                        totalAdded++;
                     }
-                    console.log("Movies Added: ", totalAdded, " Movies Couldn't Add: ", totalNotAdded);
 
                 });
 
@@ -101,7 +95,67 @@ app.post('/createDatabase', (req, res) => {
         }
     })
 });
+app.post('/queryDatabase/:title/:year', (req, res) => {
+    var queryArray = {
+        movieList :[]
+    }
+    var year = parseInt(req.params.year)
+    var title = req.params.title
+    var params = {
+        TableName : "Movies",
+        ProjectionExpression:"#yr, title, director, rating, #r, #release, #rt, #cast, plot",
+        KeyConditionExpression: "#yr = :yyyy and begins_with (title, :letter1)",
+        ExpressionAttributeNames:{
+            "#yr": "year",
+            "#r":"rank",
+            "#release":"release",
+            "#rt": "runtime",
+            "#cast": "cast"
+        },
+        ExpressionAttributeValues: {
+            ":yyyy": year,
+            ":letter1": title
+        }
+    };
 
+    docClient.query(params, function(err, data) {
+        if (err) {
+            console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
+        } else {
+            data.Items.forEach(function(item) {
+                console.log("Query Request Data: " + '\n' + item.title +'\n'+ item.year+'\n' + item.director+'\n' + item.rating + '\n' + item.plot + '\n' + item.runtime + '\n' + item.cast);
+                var hours = (Math.floor(item.runtime/3600) %24)
+                var minutes = Math.floor(item.runtime/60) %60;
+                var queryYear = item.year
+                var queryTitle = item.title
+                var queryDirector = item.director
+                var queryRating = item.rating
+                var queryRank = item.rank
+                var queryRelease = item.release
+                var queryRuntime = hours + "hr " + minutes+ "min" 
+                var queryCast = item.cast
+                var queryPlot = item.plot
+                var queryPoster = item.poster
+
+                queryArray.movieList.push(
+                    {
+                        Title: queryTitle,
+                        Year : queryYear,
+                        Director: queryDirector,
+                        Rating: queryRating,
+                        Rank: queryRank,
+                        Release: queryRelease,
+                        Runtime: queryRuntime,
+                        Cast: queryCast,
+                        Plot: queryPlot,
+                        Poster: queryPoster,
+                    }
+                )
+            });
+            res.json(queryArray)
+        }
+    });
+});
 
 app.post('/deleteDatabase', (req, res) => {
     console.log("Deleting table...");
@@ -113,12 +167,12 @@ app.post('/deleteDatabase', (req, res) => {
             console.error("Unable to delete table. Error JSON:", JSON.stringify(err, null, 2));
         } else {
             console.log("Successfully deleted table 'Movies'");
-            totalAdded = 0;
-            totalNotAdded = 0;
         }
 
     });
 });
+
+
 
 
 
