@@ -19,11 +19,14 @@ app.listen(PORT, () => console.log(`Server started on PORT: ${PORT} \n`));
 AWS.config.update({
     accessKeyId: publicKey,
     secretAccessKey: privateKey,
-    region: "us-east-1",
+    region: "eu-west-1",
 });
 
 var dynamodb = new AWS.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
+var totalAdded = 0;
+var totalNotAdded = 0;
+
 
 app.post('/createDatabase', (req, res) => {
     console.log("Creating Table...")
@@ -51,6 +54,7 @@ app.post('/createDatabase', (req, res) => {
             console.log("Table Created. Table description JSON:", JSON.stringify(data, null, 2));
         }
     });
+
     var s3BucketParams = {
         Bucket: 'csu44000assignment220',
         Key: 'moviedata.json'
@@ -62,16 +66,20 @@ app.post('/createDatabase', (req, res) => {
         } else {
             var allMovies = JSON.parse(data.Body.toString());
              allMovies.forEach(function (movie) {
-                // console.log(allMovies);
+                //console.log(allMovies);
                 var tableParams = {
                     TableName: "Movies",
                     Item: {
                         "title": movie.title,
                         "year": movie.year,
-                        "release": movie.info.release_date,
+                        "release": new Date(movie.info.release_date).toDateString(),
                         "director":  movie.info.directors,
                         "rating": movie.info.rating,
                         "rank": movie.info.rank,
+                        "cast": movie.info.actors,
+                        "plot": movie.info.plot,
+                        "runtime": movie.info.running_time_secs,
+                        "poster": movie.info.image_url,
                     }
                 
                 };
@@ -80,14 +88,20 @@ app.post('/createDatabase', (req, res) => {
                 docClient.put(tableParams, function (err) {
                     if (err) {
                         console.error("Error. Can't add Movie: ", movie.title);
+                        totalNotAdded++;
                     } else {
                         console.log("Added Movie:", movie.title);
+                        totalAdded++;
                     }
+                    console.log("Movies Added: ", totalAdded, " Movies Couldn't Add: ", totalNotAdded);
+
                 });
+
             });
         }
     })
 });
+
 
 app.post('/deleteDatabase', (req, res) => {
     console.log("Deleting table...");
@@ -99,7 +113,10 @@ app.post('/deleteDatabase', (req, res) => {
             console.error("Unable to delete table. Error JSON:", JSON.stringify(err, null, 2));
         } else {
             console.log("Successfully deleted table 'Movies'");
+            totalAdded = 0;
+            totalNotAdded = 0;
         }
+
     });
 });
 

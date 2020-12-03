@@ -12,7 +12,11 @@
         <div id="action">
             <h1>Simple Cloud Application</h1>
             <button v-on:click="createDatabase">Create Table</button><br><br>
-            <button v-on:click="deleteDatabase">Delete Table</button><br>
+           
+            Movie Title: <input v-model="title"><br> Movie Year: <input v-model="year"><br>
+            <button v-on:click="queryDatabase(year, title)">Query</button><br><br>
+            
+            <button v-on:click="deleteDatabase">Delete Table</button><br><br>
                
         </div>
     
@@ -22,10 +26,12 @@
                 data: {
                     title: '',
                     year: '',
+                    queryList: [],
                 },
                 methods: {
                     createDatabase: createDatabase,
                     deleteDatabase: deleteDatabase,
+                    queryDatabase: queryDatabase,
                 }
             })
     
@@ -42,6 +48,15 @@
                 .then(response => {
                 })
             }
+
+            function queryDatabase(year, title) {
+            let prom = fetch('/queryDatabase/'+title+'/'+year, {method:'POST'})
+            prom.then(response => response.json())
+                .then(response => {
+                    this.queryList = response.movieList
+                })
+        }
+
     
         </script>
     </body>
