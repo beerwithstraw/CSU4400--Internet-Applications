@@ -3,8 +3,8 @@ const express = require("express")
 const path = require("path")
 
 const app = express()
-const publicKey = "AKIAXSRFFSH5EKGZQ5LE"
-const privateKey = "RMICI4FXFLbQCEVrQVrlVB14llz7m4C5oq7otqzU"
+// const publicKey = "AKIAXSRFFSH5EKGZQ5LE"
+// const privateKey = "RMICI4FXFLbQCEVrQVrlVB14llz7m4C5oq7otqzU"
 
 let publicPath = path.resolve(__dirname, "public")
 app.use(express.static(publicPath))
@@ -13,13 +13,14 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/index.html"))
 })
 
-const PORT = 8000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server started on PORT: ${PORT} \n`));
 
 AWS.config.update({
-    accessKeyId: publicKey,
-    secretAccessKey: privateKey,
-    region: "eu-west-1",
+    // accessKeyId: publicKey,
+    // secretAccessKey: privateKey,
+    // region: "eu-west-1",
+    region: "us-east-1",
 });
 
 var dynamodb = new AWS.DynamoDB();
@@ -40,8 +41,8 @@ app.post('/createDatabase', (req, res) => {
             { AttributeName: "title", AttributeType: "S" }
         ],
         ProvisionedThroughput: {
-            ReadCapacityUnits: 50,
-            WriteCapacityUnits: 50,
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
         }
     };
     dynamodb.createTable(params, function (err, data) {
@@ -53,9 +54,12 @@ app.post('/createDatabase', (req, res) => {
     });
 
     var s3BucketParams = {
-        Bucket: 'csu44000assignment220',
+        Bucket: 'csu44000assign2useast20',
         Key: 'moviedata.json'
     }
+
+let promise = new Promise((res) =>{
+    setTimeout(() => {
     var s3 = new AWS.S3();
     s3.getObject(s3BucketParams, function (err, data) {
         if (err) {
@@ -94,6 +98,8 @@ app.post('/createDatabase', (req, res) => {
             });
         }
     })
+},5000);
+});
 });
 app.post('/queryDatabase/:title/:year', (req, res) => {
     var queryArray = {
