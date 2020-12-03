@@ -1,3 +1,7 @@
+// Pulkit Agarwal (19323939)
+// CSU44000- INTERNET APPLICATIONS 2020-21
+// Assignment-2 (Cloud Application Database) 
+
 const AWS = require("aws-sdk");
 const express = require("express")
 const path = require("path")
