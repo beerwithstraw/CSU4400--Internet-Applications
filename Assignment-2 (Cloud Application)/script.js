@@ -7,8 +7,8 @@ const express = require("express")
 const path = require("path")
 
 const app = express()
-// const publicKey = "AKIAXSRFFSH5EKGZQ5LE"
-// const privateKey = "RMICI4FXFLbQCEVrQVrlVB14llz7m4C5oq7otqzU"
+const publicKey = "AKIAXSRFFSH5EKGZQ5LE"
+const privateKey = "RMICI4FXFLbQCEVrQVrlVB14llz7m4C5oq7otqzU"
 
 let publicPath = path.resolve(__dirname, "public")
 app.use(express.static(publicPath))
@@ -21,10 +21,10 @@ const PORT = 3000;
 app.listen(PORT, () => console.log(`Server started on PORT: ${PORT} \n`));
 
 AWS.config.update({
-    // accessKeyId: publicKey,
-    // secretAccessKey: privateKey,
-    // region: "eu-west-1",
-    region: "us-east-1",
+    accessKeyId: publicKey,
+    secretAccessKey: privateKey,
+    region: "eu-west-1",
+    // region: "us-east-1",
 });
 
 var dynamodb = new AWS.DynamoDB();
